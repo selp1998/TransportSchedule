@@ -9,37 +9,36 @@
              d:DesignHeight="500" d:DesignWidth="1000">
     <Grid Background="White">
         <StackPanel Orientation="Horizontal">
-            <StackPanel HorizontalAlignment="Left" Margin="5 0 0 0" Background="GhostWhite" Width="260">
+            <StackPanel HorizontalAlignment="Left" Margin="0 0 0 0" Background="GhostWhite" Width="260">
                 <StackPanel Orientation="Vertical">
-                    <TextBox x:Name="NumberTextBox" Width="230" Height="33" materialDesign:HintAssist.Hint="Номер" TextWrapping="Wrap" Margin="0 5"/>
-                    <Button Content="Отобразить"  Width="140" Click="ShowByNumber"/>
+                    <TextBox x:Name="NumberTextBox" Width="230" Height="33" FontSize="15" materialDesign:HintAssist.Hint="Номер" TextWrapping="Wrap" Margin="0 5"/>
+                    <Button Content="Отобразить"  Width="250" Click="ShowByNumber"/>
                 </StackPanel>
+                <ComboBox x:Name="ComboBoxRoutes" Margin="0 5 0 5" IsEditable="True" FontSize="15" Width="250" Style="{StaticResource MaterialDesignFloatingHintComboBox}"/>
+                <Button Content="Показать" Width="250" Click="ShowByRouteName"/>
                 <StackPanel Orientation="Vertical">
-                    <TextBox x:Name="data2" materialDesign:HintAssist.Hint="Остановка" Height="33" Width="230" TextWrapping="Wrap"  Margin="0 5"/>
-                    <Button Content="Отобразить" Width="140"/>
+                    <StackPanel Orientation="Horizontal">
+                        <ComboBox x:Name="ComboBoxBus" Margin="5 5 0 5" IsEditable="False" Width="50" FontSize="15" SelectionChanged="ComboBoxBus_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}"/>
+                        <ComboBox x:Name="ComboBoxStation" IsEditable="False" Margin="10 5 0 5" IsEnabled="False" FontSize="15" Width="185" Style="{StaticResource MaterialDesignFloatingHintComboBox}"/>
+                    </StackPanel>
+                    <Button Content="Узнать расписание автобуса" Width="250" Click="ShowArriveTime_Click"/>
                 </StackPanel>
-                <ComboBox x:Name="ComboBoxRoutes" Margin="0 5 0 5" IsEditable="True" Width="250" Style="{StaticResource MaterialDesignFloatingHintComboBox}"/>
-                <Button Content="Показать" Width="140" Click="ShowByRouteName"/>
+                
                 <materialDesign:PackIcon Margin="0 30 0 0" Kind="Bus" Width="200" Height="200" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryHueLightBrush}"/>
             </StackPanel>
             <StackPanel>
             <StackPanel>
-                <Label Content="Маршрут" FontSize="20" FontWeight="Bold"/>
-                <!--<DataGrid x:Name="RoutesDataGrid" Visibility="Visible" Height="100" Width="750" IsReadOnly="True" CanUserSortColumns="True"  CanUserAddRows="False" AutoGenerateColumns="False" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Auto" Margin="10 4 0 0">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="50" />
-                        <DataGridTextColumn Header="Маршрут" Binding="{Binding Name}" Width="350" />
-                    </DataGrid.Columns>
-                </DataGrid>-->
-                <ListView x:Name="RoutesListView"></ListView>
+                    <Label Content="Маршрут" FontSize="20" FontWeight="Bold"/>
+                    <TextBlock x:Name="TextBlockNothing" Text="Вы ничего не выбрали" FontSize="17" Margin="6 0 0 0"/>
+                    <ListView x:Name="RoutesListView" Margin="0 -20 0 0"></ListView>
             </StackPanel>
 
             <StackPanel>
                     <Label Content="Остановки" FontSize="20" FontWeight="Bold"/>
-                    <DataGrid x:Name="StationsDataGrid" Visibility="Hidden" Width="750" IsReadOnly="True" CanUserSortColumns="True"  CanUserAddRows="False" AutoGenerateColumns="False" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Auto" Margin="5 4 0 0">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="70" />
-                        <DataGridTextColumn Header="Остановка" Binding="{Binding Name}" Width="350" />
+                    <TextBlock x:Name="TextBlockNothing2" Text="Вы ничего не выбрали" FontSize="17" Margin="6 0 0 0"></TextBlock>
+                    <DataGrid x:Name="StationsDataGrid" Visibility="Hidden" Width="750" IsReadOnly="True" CanUserSortColumns="True"  CanUserAddRows="False" AutoGenerateColumns="False" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Auto" Margin="5 -20 0 0">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Остановка" Binding="{Binding Name}" Width="350" />
                     </DataGrid.Columns>
                 </DataGrid>
             </StackPanel>

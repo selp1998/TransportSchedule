@@ -29,14 +29,7 @@ namespace Transport.UserControls
             InitializeComponent();
             using (AppDbContext db = new AppDbContext())
             {
-                //db.Stations.Load();
-                //db.Buses.Load();
-                //foreach (var item in db.Stations)
-                //{
-                //    MessageBox.Show(item.Name);
-                //}
                 RouteList = db.Routes.ToList();
-                //RoutesDataGrid.ItemsSource = RouteList;
 
                 var routesNamesList = new List<string>();
                 foreach (var route in db.Routes)
@@ -46,51 +39,128 @@ namespace Transport.UserControls
                 ComboBoxRoutes.ItemsSource = routesNamesList;
                 ComboBoxRoutes.SelectedIndex = 0;
             }
-            //Bus bus = new Bus() { Number};
+            ShowArriveTime();
+            ComboBoxBus.SelectedIndex = 0;
         }
-
-        public object Response { get; private set; }
-
         private void BusInit()
         {
-            try {
+            try
+            {
                 using (AppDbContext db = new AppDbContext())
                 {
                     Autobus bus = new Autobus()
                     {
                         Number = 1
                     };
-                    db.Buses.Add(bus);
-                    Trolleybus trolleybus = new Trolleybus()
-                    {
-                        Number = 13
-                    };
 
                     Station station = new Station()
                     {
-                        Name = "БГТУ",
+                        Name = "Вокзал",
                     };
 
-                    station.Buses.Add(bus);
-                    station.Trolleys.Add(trolleybus);
+                    Station station2 = new Station()
+                    {
+                        Name = "Аранская",
+                    };
+
+                    Station station3 = new Station()
+                    {
+                        Name = "Пролетарская",
+                    };
+
+                    Station station4 = new Station()
+                    {
+                        Name = "Мясниковича",
+                    };
+
+                    Station station5 = new Station()
+                    {
+                        Name = "Автозаводская",
+                    };
+
+                    bus.Stations.Add(station);
+                    bus.Stations.Add(station2);
+                    bus.Stations.Add(station3);
+                    bus.Stations.Add(station4);
+                    bus.Stations.Add(station5);
 
                     Route route = new Route()
                     {
                         Name = "Вокзал - ДС Автозаводская"
                     };
-                    route.Stations.Add(station);
+                    route.Autobuses.Add(bus);
                     bus.Route = route; //у автобуса есть машрут
+
+                    AutobusStation autobusStation = new AutobusStation()
+                    {
+                        Autobus = bus,
+                        Station = station
+                    };
+
+                    AutobusStation autobusStation2 = new AutobusStation()
+                    {
+                        Autobus = bus,
+                        Station = station2
+                    };
+
+                    AutobusStation autobusStation3 = new AutobusStation()
+                    {
+                        Autobus = bus,
+                        Station = station3
+                    };
+
+                    AutobusStation autobusStation4 = new AutobusStation()
+                    {
+                        Autobus = bus,
+                        Station = station4
+                    };
+
+                    AutobusStation autobusStation5 = new AutobusStation()
+                    {
+                        Autobus = bus,
+                        Station = station5
+                    };
+
+                    Arrive arrive = new Arrive()
+                    {
+                        AutobusStation = autobusStation,
+                        Time = "9:37 9:55 10:21 11:37 13:12"
+                    };
+                    Arrive arrive2 = new Arrive()
+                    {
+                        AutobusStation = autobusStation2,
+                        Time = "9:40 9:57 10:25 11:42 13:17"
+                    };
+                    Arrive arrive3 = new Arrive()
+                    {
+                        AutobusStation = autobusStation3,
+                        Time = "9:45 10:00 10:30 11:47 13:20"
+                    };
+                    Arrive arrive4 = new Arrive()
+                    {
+                        AutobusStation = autobusStation4,
+                        Time = "9:48 10:05 10:35 11:51 13:27"
+                    };
+                    Arrive arrive5 = new Arrive()
+                    {
+                        AutobusStation = autobusStation5,
+                        Time = "9:55 10:10 10:40 11:56 13:33"
+                    };
+
                     db.Routes.Add(route);
-                    
+                    db.Arrives.Add(arrive);
+                    db.Arrives.Add(arrive2);
+                    db.Arrives.Add(arrive3);
+                    db.Arrives.Add(arrive4);
+                    db.Arrives.Add(arrive5);
                     db.SaveChanges();
                 }
             }
-
             catch (DbEntityValidationException ex)
             {
                 foreach (DbEntityValidationResult validationError in ex.EntityValidationErrors)
                 {
-                    MessageBox.Show("Object: " + validationError.Entry.Entity.ToString() );
+                    MessageBox.Show("Object: " + validationError.Entry.Entity.ToString());
 
                     foreach (DbValidationError err in validationError.ValidationErrors)
                     {
@@ -105,19 +175,20 @@ namespace Transport.UserControls
             //BusInit();
             using (AppDbContext db = new AppDbContext())
             {
-                //db.Routes.Where(p=>p.Stations.Where(c=>c.Buses.))
                 List<Route> routes = new List<Route>();
-                int num =  db.Buses.Where(p => p.Number.ToString() == NumberTextBox.Text).Count();
+                int num = db.Buses.Where(p => p.Number.ToString() == NumberTextBox.Text).Count();
                 if (num > 0)
                 {
                     Autobus bus = db.Buses.Where(p => p.Number.ToString() == NumberTextBox.Text).First();
                     Route route = db.Routes.Where(p => p.Id == bus.RouteId).FirstOrDefault();
                     routes.Add(route);
                     List<Station> stations = new List<Station>();
-                    foreach (var station in route.Stations)
+                    foreach (var station in bus.Stations)
                     {
                         stations.Add(station);
                     }
+                    TextBlockNothing.Visibility = Visibility.Hidden;
+                    TextBlockNothing2.Visibility = Visibility.Hidden;
                     StationsDataGrid.Visibility = Visibility.Visible;
                     RoutesListView.ItemsSource = routes;
                     StationsDataGrid.ItemsSource = stations;
@@ -140,12 +211,77 @@ namespace Transport.UserControls
                 routes.Add(route);
 
                 List<Station> stations = new List<Station>();
-                foreach (var station in route.Stations)
+                List<Autobus> buses = new List<Autobus>();
+                db.Buses.Load();
+                foreach (var bus in db.Buses.Local.ToList())
+                {
+                    if (bus.Route.Id == route.Id)
+                    {
+                        buses.Add(bus);
+                    }
+                }
+
+                foreach (var bus in buses)
+                {
+                    foreach (var station in bus.Stations)
+                    {
+                        stations.Add(station);
+                    }
+                }
+                TextBlockNothing.Visibility = Visibility.Hidden;
+                TextBlockNothing2.Visibility = Visibility.Hidden;
+                RoutesListView.ItemsSource = routes;
+                StationsDataGrid.ItemsSource = stations;
+            }
+        }
+
+        private void ShowArriveTime()
+        {
+            using (AppDbContext db = new AppDbContext())
+            {
+                List<string> busNumbers = new List<string>();
+                List<Autobus> buses = new List<Autobus>();
+                foreach (var bus in db.Buses)
+                {
+                    busNumbers.Add(bus.Number.ToString());
+                    buses.Add(bus);
+                }
+                ComboBoxBus.ItemsSource = busNumbers;
+                ComboBoxStation.IsEnabled = true;
+            }
+        }
+
+        private void ShowArriveTime_Click(object sender, RoutedEventArgs e)
+        {
+            ShowArriveTime();
+            using (AppDbContext db = new AppDbContext())
+            {
+                Station station = (Station)ComboBoxStation.SelectedItem;
+                Station currentStation = db.Stations.Find(station.Id);
+                AutobusStation autst = db.AutobusStations.Where(p => p.Station.Id == currentStation.Id).First();
+                Arrive arrive = db.Arrives.Where(p => p.AutobusStationId == autst.Id).First();
+                MessageBox.Show(arrive.Time);
+            }
+        }
+
+        private void ComboBoxBus_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            using (AppDbContext db = new AppDbContext())
+            {
+                List<Station> stations = new List<Station>();
+                List<Autobus> buses = new List<Autobus>();
+                foreach (var bus in db.Buses)
+                {
+                    buses.Add(bus);
+                }
+
+                Autobus autobus = db.Buses.Where(p => p.Number.ToString() == ComboBoxBus.SelectedItem.ToString()).First();
+                foreach (var station in autobus.Stations)
                 {
                     stations.Add(station);
                 }
-                RoutesListView.ItemsSource = routes;
-                StationsDataGrid.ItemsSource = stations;
+                ComboBoxStation.ItemsSource = stations;
+                ComboBoxStation.SelectedIndex = 0;
             }
         }
     }

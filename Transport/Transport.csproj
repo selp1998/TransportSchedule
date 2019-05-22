@@ -71,7 +71,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\Arrive.cs" />
     <Compile Include="Models\Autobus.cs" />
+    <Compile Include="Models\AutobusStation.cs" />
     <Compile Include="Models\Route.cs" />
     <Compile Include="Models\Station.cs" />
     <Compile Include="Models\Trolleybus.cs" />

@@ -11,7 +11,7 @@
         Title="Общественный транспорт города" Height="570" Width="1000"
         WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
         >
-    <Grid>
+    <Grid MouseLeftButtonDown="RangeDragWindow_MouseLeftButtonDown">
         <Grid Height="40" VerticalAlignment="Top" Background="{DynamicResource PrimaryHueMidBrush}">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock Text="Транспорт города" FontSize="28" Foreground="{DynamicResource MaterialDesignPaper}" FontFamily="Century Gothic" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>

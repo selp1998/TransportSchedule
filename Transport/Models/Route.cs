@@ -10,10 +10,10 @@ namespace Transport.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public virtual ICollection<Station> Stations { get; set; } 
+        public virtual ICollection<Autobus> Autobuses { get; set; } 
         public Route()
         {
-            Stations = new List<Station>();
+            Autobuses = new List<Autobus>();
         }
 
         public override string ToString()
